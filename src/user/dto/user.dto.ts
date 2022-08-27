@@ -11,5 +11,6 @@ export class UserCreateDto {
   @IsNotEmpty()
   lastName: string;
 
+  @IsNotEmpty()
   password: string;
 }

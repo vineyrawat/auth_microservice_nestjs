@@ -15,7 +15,7 @@ export class UserService {
     const existedUser = await this.prisma.user.findFirst({
       where: { email: user.email },
     });
-    if (!existedUser)
+    if (existedUser)
       throw new HttpException(
         {
           message: ['Email already registered'],
@@ -24,7 +24,20 @@ export class UserService {
         },
         HttpStatus.BAD_REQUEST,
       );
-    return 'creating';
+    const newUser = await this.prisma.user.create({
+      data: {
+        email: user.email,
+        firstname: user.firstName,
+        lastname: user.lastName,
+        password: user.password,
+      },
+    });
+    return {
+      email: newUser.email,
+      firstName: newUser.firstname,
+      lastName: newUser.lastname,
+      isVerified: newUser.isVerified,
+    };
   }
 
   async user(
